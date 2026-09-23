@@ -1,3 +1,6 @@
+using DesafioBackEndPicpay;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,15 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlite(connectionString);
+});
+
+
 
 var app = builder.Build();
 
@@ -18,9 +30,6 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/myapijson", "My API V1");
     });
 }
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 
 
 app.UseHttpsRedirection();
