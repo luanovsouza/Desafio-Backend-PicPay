@@ -30,11 +30,14 @@ public class UserService
         var response =  await _httpClient.GetFromJsonAsync<ApiTransferAuthorize>(url);
         
         //Retorna a propriedade de autorização do Api
-        return response.Data.Authorization;
+        return response!.Data.Authorization;
     }
     
     public async Task Transfer(decimal amount, User senderUser,  User receiverUser)
     {
+        //Comando para voltar tudo se caso nao funcionar
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        
         if (GetTypeUser(senderUser.TypeUser))
             throw new Exception("Merchants cannot make transfers!");
         
@@ -47,17 +50,19 @@ public class UserService
             
             if(authorization != null)
                 throw new Exception("Transfer not authrorized!!");
+            
+            
+            senderUser.Balance -= amount;
+            receiverUser.Balance += amount;
+
+            await _context.SaveChangesAsync();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
+            //Volta tudo se der ruim
+            await transaction.RollbackAsync();
             throw;
         }
-        
-        
-        senderUser.Balance -= amount;
-        receiverUser.Balance += amount;
-
-        await _context.SaveChangesAsync();
     }
 }
