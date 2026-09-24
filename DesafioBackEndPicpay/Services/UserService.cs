@@ -1,19 +1,19 @@
 ﻿using DesafioBackEndPicpay.Dtos;
 using DesafioBackEndPicpay.Enum;
 using DesafioBackEndPicpay.Models;
-using DesafioBackEndPicpay.Repositories.Interfaces;
+using DesafioBackEndPicpay.Services.Interfaces;
 
-namespace DesafioBackEndPicpay.Services.Interfaces;
+namespace DesafioBackEndPicpay.Services;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly AppDbContext _context;
     private readonly HttpClient _httpClient;
 
-    protected UserService(AppDbContext appDbContext, HttpClient httpClient)
+    public UserService(AppDbContext appDbContext, IHttpClientFactory httpClientFactory)
     {
         _context = appDbContext;
-        _httpClient = httpClient;
+        _httpClient = httpClientFactory.CreateClient();
     }
 
     public bool GetTypeUser(TypeUser typeUser)
@@ -21,7 +21,7 @@ public class UserService
         return typeUser == TypeUser.Shop;
     }
 
-    protected async Task<bool?> GetApiTransfer()
+    public async Task<bool?> GetApiTransfer()
     {   
         //Acesa o Mock
         string url = "https://util.devi.tools/api/v2/authorize";
@@ -48,7 +48,7 @@ public class UserService
         {
             var authorization = await GetApiTransfer();
             
-            if(authorization != null)
+            if(authorization == null)
                 throw new Exception("Transfer not authrorized!!");
             
             

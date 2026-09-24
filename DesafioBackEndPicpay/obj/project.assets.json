@@ -3542,8 +3542,7 @@
       "Microsoft.EntityFrameworkCore >= 9.0.20",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.20",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.20",
-      "Swashbuckle.AspNetCore >= 9.0.6",
-      "Swashbuckle.AspNetCore.SwaggerUI >= 9.0.6"
+      "Swashbuckle.AspNetCore >= 9.0.6"
     ]
   },
   "packageFolders": {
@@ -3608,10 +3607,6 @@
             "version": "[9.0.20, )"
           },
           "Swashbuckle.AspNetCore": {
-            "target": "Package",
-            "version": "[9.0.6, )"
-          },
-          "Swashbuckle.AspNetCore.SwaggerUI": {
             "target": "Package",
             "version": "[9.0.6, )"
           }
